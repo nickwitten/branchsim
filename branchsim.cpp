@@ -83,6 +83,7 @@ bool perceptron::predict(branch *branch)
     uint64_t base_weight_ind = perceptron_ind * (m_G + 1);
     // Perform the dot product between weights and GHR
     int64_t result = dot_product(base_weight_ind);
+
 #ifdef DEBUG
     printf("\tPerceptron: Predicting... \n");
     printf("\t\tPerceptron Table index: 0x%" PRIx64 ", Global History: 0x%" PRIx64 ", Y: %" PRId64 ", Prediction: %d\n", perceptron_ind, m_GlobalHistory, result, (result > 0));
@@ -93,6 +94,7 @@ bool perceptron::predict(branch *branch)
     }
     printf("\n");
 #endif
+
     if (result > 0) {
         return true;
     } else {
@@ -120,7 +122,7 @@ void perceptron::update_predictor(branch *branch)
             wi = wi + t * xi;
             m_WeightTable[base_weight_ind + i + 1] = wi;
         }
-        for (int i = 0; i < m_G + 1; i++) {
+        for (uint64_t i = 0; i < m_G + 1; i++) {
             int64_t wi = m_WeightTable[base_weight_ind + i];
             if (wi > m_Theta) {
                 wi = m_Theta;
@@ -133,6 +135,7 @@ void perceptron::update_predictor(branch *branch)
     // Update GHR
     m_GlobalHistory = (m_GlobalHistory << 1) + (int)branch->is_taken;
     m_GlobalHistory = m_GlobalHistory & (((uint64_t)1 << m_G) - 1);
+
 #ifdef DEBUG
     printf("\tPerceptron: Updating based on actual behavior: %d\n", branch->is_taken);
     printf("\t\tNew Global History: 0x%" PRIx64 "\n", m_GlobalHistory);
@@ -143,6 +146,7 @@ void perceptron::update_predictor(branch *branch)
     }
     printf("\n");
 #endif
+
 }
 
 perceptron::~perceptron()
