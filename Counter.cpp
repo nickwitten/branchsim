@@ -6,32 +6,51 @@
 // ===================================================================
 
 Counter::Counter(uint64_t width) {
-    // TODO: implement me
+    m_Width = width;
+    m_WeaklyTaken = (1 << (m_Width >> 1)); // weakly taken state is 2^(width//2)
+    m_WeaklyNotTaken = m_WeaklyTaken - 1;
+    m_MaxValue = (1 << m_Width) - 1;
+    m_Val = m_WeaklyNotTaken;
 }
 
 void Counter::update(bool taken) {
-    // TODO: implement me
+    if (taken) {
+        // If it's at the saturation point don't increment
+        m_Val = (m_Val < m_MaxValue) ? m_Val + 1: m_Val;
+    } else {
+        // If it's at the saturation point don't increment
+        m_Val = (m_Val > 0) ? m_Val - 1 : m_Val;
+    }
 }
 
 uint64_t Counter::get() {
-    // TODO: implement me
-    return 0;
+    return m_Val;
 }
 
 bool Counter::isTaken() {
-    // TODO: implement me
-    return false;
+    if (m_Val >= m_WeaklyTaken) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void Counter::setCount(uint64_t count) {
-    // TODO: implement me
+    m_Val = count;
 }
 
 bool Counter::isWeak() {
-    // TODO: implement me
-    return false;
+    if (m_Val == m_WeaklyTaken || m_Val == m_WeaklyNotTaken) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void Counter::reset(bool taken) {
-    // TODO: implement me
+    if (isTaken()) {
+        m_Val = m_WeaklyTaken;
+    } else {
+        m_Val = m_WeaklyNotTaken;
+    }
 }

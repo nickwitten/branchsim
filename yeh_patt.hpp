@@ -11,6 +11,13 @@ class yeh_patt : public branch_predictor_base
 private:
 
     // TODO: add your fields here
+    uint64_t m_L;
+    uint64_t m_P;
+    uint64_t m_PcMask;  // Use to get index bits out of PC
+    const uint64_t m_PcMask_bp = 2; // Offset bit position
+    uint64_t m_ShiftMask;  // Use to simulate only P bits in shift registers
+    uint64_t *m_HistoryTable;
+    Counter **m_PatternTable;
 
 public:
     // create optional helper functions here

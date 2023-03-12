@@ -9,7 +9,13 @@ class Counter {
     private:
 
     /* TODO: Create any private variables you need here */
-    char m_Val;
+    uint64_t m_Width;
+    uint64_t m_Val;
+
+    // Convenience variables
+    uint64_t m_WeaklyTaken;
+    uint64_t m_WeaklyNotTaken;
+    uint64_t m_MaxValue;
 
     public:
     Counter() : Counter(2) {}
