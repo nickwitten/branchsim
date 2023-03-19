@@ -159,31 +159,71 @@ perceptron::~perceptron()
 
 void tournament::init_predictor(branchsim_conf *sim_conf)
 {
-    // TODO: implement me
-    // Example:
-    // perceptron_predictor = new perceptron();
-    // perceptron_predictor->init_predictor(sim_conf);
-    // yeh_patt_predictor = new yeh_patt();
-    // yeh_patt_predictor->init_predictor(sim_conf);
+    m_PerceptronPredictor = new perceptron();
+    m_PerceptronPredictor->init_predictor(sim_conf);
+    m_YehPattPredictor = new yeh_patt();
+    m_YehPattPredictor->init_predictor(sim_conf);
+    m_CounterTable = (Counter**)malloc(sizeof(Counter*) * (1 << 12));
+    for (int i = 0; i < (1 << 12); i++) {
+        Counter *counter = new Counter(4);
+        switch (sim_conf->C) {
+            case 0:
+                counter->setCount(0b0000);
+                break;
+            case 1:
+                counter->setCount(0b0111);
+                break;
+            case 2:
+                counter->setCount(0b1000);
+                break;
+            case 3:
+                counter->setCount(0b1111);
+                break;
+            default:
+                break;
+        }
+        m_CounterTable[i] = counter;
+    }
 }
 
 bool tournament::predict(branch *branch)
 {
-    // TODO: implement me
-    return false;
+    uint64_t index = (branch->ip >> m_PcMask_bp) & m_PcMask;
+    Counter *counter = m_CounterTable[index];
+    branch_predictor_base *predictor;
+    if (counter->get() >= 0b1000) {
+        predictor = m_PerceptronPredictor;
+    } else {
+        predictor = m_YehPattPredictor;
+    }
+    return predictor->predict(branch);
 }
 
 void tournament::update_predictor(branch *branch)
 {
-    // TODO: implement me
+    uint64_t index = (branch->ip >> m_PcMask_bp) & m_PcMask;
+    Counter *counter = m_CounterTable[index];
+    bool yeh_patt_output = m_YehPattPredictor->predict(branch);
+    bool perceptron_output = m_PerceptronPredictor->predict(branch);
+    if (perceptron_output != yeh_patt_output) {
+        if (perceptron_output == branch->is_taken) {
+            counter->update(true);
+        } else {
+            counter->update(false);
+        }
+    }
+    m_YehPattPredictor->update_predictor(branch);
+    m_PerceptronPredictor->update_predictor(branch);
 }
 
 tournament::~tournament()
 {
-    // TODO: implement me
-    // Example:
-    // delete perceptron_predictor;
-    // delete yeh_patt_predictor;
+    delete m_PerceptronPredictor;
+    delete m_YehPattPredictor;
+    for (int i = 0; i < (1 << 12); i++) {
+        delete m_CounterTable[i];
+    }
+    free(m_CounterTable);
 }
 
 

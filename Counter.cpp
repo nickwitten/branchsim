@@ -7,7 +7,7 @@
 
 Counter::Counter(uint64_t width) {
     m_Width = width;
-    m_WeaklyTaken = (1 << (m_Width >> 1)); // weakly taken state is 2^(width//2)
+    m_WeaklyTaken = 1 << (m_Width - 1); // weakly taken state is 2^(width-1)
     m_WeaklyNotTaken = m_WeaklyTaken - 1;
     m_MaxValue = (1 << m_Width) - 1;
     m_Val = m_WeaklyNotTaken;

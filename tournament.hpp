@@ -15,8 +15,11 @@ private:
     // TODO: add your fields here
     // Try not to reimplement yeh_patt and perceptron!
     // EX:
-    // yeh_patt *yeh_patt_predictor;
-    // perceptron *perceptron_predictor;
+    const uint64_t m_PcMask = (1 << 12) - 1;
+    const uint64_t m_PcMask_bp = 2;
+    yeh_patt *m_YehPattPredictor;
+    perceptron *m_PerceptronPredictor;
+    Counter **m_CounterTable;
 
 
 public:
