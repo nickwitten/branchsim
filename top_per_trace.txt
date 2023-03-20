@@ -1,0 +1,30 @@
+# TOP AVERAGE
+[11.         12.          9.         35.          1.          0.97126985]
+
+In [8]: fname = "mcf.10m.br.trace_results.txt"
+
+In [9]: results[fname][np.argmax(results[fname][:, 5])]
+Out[9]: 
+array([14.       , 12.       ,  8.       , 32.       ,  1.       ,
+        0.9993096])
+
+In [10]: fname = "gcc.10m.br.trace_results.txt"
+
+In [11]: results[fname][np.argmax(results[fname][:, 5])]
+Out[11]: 
+array([ 9.       , 12.       ,  9.       , 37.       ,  1.       ,
+        0.9767927])
+
+In [12]: fname = "x264.10m.br.trace_results.txt"
+
+In [13]: results[fname][np.argmax(results[fname][:, 5])]
+Out[13]: 
+array([13.       , 11.       ,  9.       , 36.       ,  1.       ,
+        0.9569879])
+
+In [14]: fname = "perlbench.10m.br.trace_results.txt"
+
+In [15]: results[fname][np.argmax(results[fname][:, 5])]
+Out[15]: 
+array([11.       , 12.       ,  9.       , 35.       ,  1.       ,
+        0.9531509])
